@@ -1,7 +1,7 @@
 # mkcdf
 
 ## USAGE
-`mkcdf -name var -name_long "long name" [-option] data.bin`
+`mkcdf -name var -name_long "long name" [-option] data_file_YYYY1[-YYYY2].bin`
 
 ## Option
 `-name`: variable name e.g., QA  
