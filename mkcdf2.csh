@@ -22,13 +22,14 @@
 #          (data file must be one big file as data_file_YYYY1-YYYY2.bin)
 #
 # CHANGES
+#  v1.2 @MacPro3 (add EMSST variables)
 #  v1.1 @MacPro3 (-unit, ENV)
 #----------------------------------------------------------------------- 
 # ENV.
    set netcdfinc=/opt/local/include
    set netcdflib=/opt/local/lib
    set codedir=/Users/tomita/KSD/UNIX/MKCDF/V2
-   set version=v1.1
+   set version=v1.2
 
 # INIT.
   set name=VAR
@@ -151,7 +152,7 @@ OFILE:
    set unit="m\/s"
   else if ($name == "SST" || $name == "TA" || $name == "TA10" || $name == "DT") then
    set unit="deg.C"
-  else if ($name == "NUM" || $name == "FREQ") then
+  else if ($name == "NUM" || $name == "FREQ" || $name == "EMN" || $name == "EMS" ) then
    set unit="-"
   else if ($name == "WV") then
    set unit="mm"
