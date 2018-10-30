@@ -21,15 +21,20 @@
 #   -ltmm: long-term monthly mean (12 months x n years)
 #          (data file must be one big file as data_file_YYYY1-YYYY2.bin)
 #
+#  DT: Data Type
+#   -real (default)
+#   -integer  
+#
 # CHANGES
+#  V1.3 @MacPro3 (add option for integer[daily hr only])
 #  v1.2 @MacPro3 (add EMSST variables)
 #  v1.1 @MacPro3 (-unit, ENV)
 #----------------------------------------------------------------------- 
 # ENV.
    set netcdfinc=/opt/local/include
    set netcdflib=/opt/local/lib
-   set codedir=/Users/tomita/KSD/UNIX/MKCDF/V2
-   set version=v1.2
+   set codedir=/Users/tomita/KSD/UNIX/MKCDF/mkcdf
+   set version=v1.3
 
 # INIT.
   set name=VAR
@@ -42,6 +47,8 @@
   set sw_ann=0
   set sw_clm=0
   set sw_ltmm=0
+  set sw_real=1
+  set sw_int=0
   @ nopt=$nopt - 1
 
 # OPT
@@ -88,13 +95,22 @@
      set unit=`echo $argv[$np]`
      goto SKIP
     endif
+    if ("$input" == "-real") then
+     set sw_real=1 
+     set sw_int=0
+     goto SKIP
+    endif
+    if ("$input" == "-integer") then
+     set sw_real=0
+     set sw_int=1
+     goto SKIP
+    endif
 SKIP:
     @ n=$n + 1
   end
 
 FILE:
   set file=$argv[$#argv]
-
 
 GET_YEAR:
 # SOUCE and COMPILE for get_year
@@ -204,7 +220,11 @@ CHK:
    else if ($sw_ltmm == 1) then
     set code=/$codedir/mk_ofuro_nc_ltmm_v1.1.f
    else
-    set code=/$codedir/mk_ofuro_nc_v1.1.f
+    if ($sw_real == 1) then
+     set code=/$codedir/mk_ofuro_nc_v1.1.f
+    else if($sw_int == 1) then
+     set code=/$codedir/mk_ofuro_nc_integer_v1.3.f
+    endif
    endif
   else if ($sw_lr == 1) then
    if ($sw_mon == 1) then
