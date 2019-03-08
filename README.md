@@ -10,6 +10,7 @@
 `-hr`: 1440 x 720 input  
 `-lr`: 360 x 180 input  
 `-day`: daily mean (365 or 366 days)  
+`-aday`: a day (a specific day) with YYYY-MM-DD 
 `-mon`: monthly mean (12 months)  
 `-ann`: annual mean  (1 year)  
 `-clm`: climatological mean (12 months)  

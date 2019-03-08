@@ -20,12 +20,14 @@
 #   -clm : climatological mean (12 months)
 #   -ltmm: long-term monthly mean (12 months x n years)
 #          (data file must be one big file as data_file_YYYY1-YYYY2.bin)
+#   -aday: a day (a specific day) with YYYY-MM-DD
 #
 #  DT: Data Type
 #   -real (default)
 #   -integer  
 #
 # CHANGES
+#  V1.4 @MacPro3 (add option -aday)
 #  V1.3 @MacPro3 (add option for integer[daily hr only])
 #  v1.2 @MacPro3 (add EMSST variables)
 #  v1.1 @MacPro3 (-unit, ENV)
@@ -34,7 +36,7 @@
    set netcdfinc=/opt/local/include
    set netcdflib=/opt/local/lib
    set codedir=/Users/tomita/KSD/UNIX/MKCDF/mkcdf
-   set version=v1.3
+   set version=v1.4
 
 # INIT.
   set name=VAR
@@ -47,6 +49,7 @@
   set sw_ann=0
   set sw_clm=0
   set sw_ltmm=0
+  set sw_aday=0
   set sw_real=1
   set sw_int=0
   @ nopt=$nopt - 1
@@ -78,6 +81,12 @@
     endif
     if ( "$input" == "-ltmm" ) then
      set sw_ltmm=1
+     goto SKIP
+    endif
+    if ( "$input" == "-aday" ) then
+     set sw_aday=1
+     @ np=$n + 1
+     set date=`echo $argv[$np]`
      goto SKIP
     endif
     if ("$input" == "-name") then
@@ -114,6 +123,15 @@ FILE:
 
 GET_YEAR:
 # SOUCE and COMPILE for get_year
+  if ($sw_aday == 1) then
+   set year1=`echo $date | awk -F- '{print $1}'`
+   set month1=`echo $date | awk -F- '{print $2}'`
+   set day1=`echo $date | awk -F- '{print $3}'`
+   set year2="dummy"
+   goto OFILE
+  endif
+  set month1="dummy"
+  set day1="dummy"
   if -r tmp_$$.f rm tmp_$$.f
   set gyf=tmp_$$.f
   echo "      character*100 file" > $gyf
@@ -175,6 +193,10 @@ OFILE:
   endif
 
 # JULIAN DAYS
+  if ($sw_aday) then
+    set jdays=1
+    goto TEMPORAL
+  endif
   if ($year == 1988 || $year == 1992 || $year == 1996 || $year == 2000 || $year == 2004 || $year == 2008 || $year == 2012 || $year == 2016 || $year == 2020 ) then
    set jdays=366
   else
@@ -182,6 +204,7 @@ OFILE:
   endif
 
 # TEMPORAL
+TEMPORAL:
  if ($sw_mon == 1) then
   set temporal=monthly
  else if ($sw_ann == 1) then
@@ -190,6 +213,9 @@ OFILE:
   set temporal=clm
  else if ($sw_ltmm == 1) then
   set temporal=ltmm
+ else if ($sw_aday == 1) then
+  set temporal=aday
+  set year=$date
  else
   set temporal=daily
  endif
@@ -201,7 +227,7 @@ CHK:
   echo "  Long name     :"$name_long
   echo "  File name     :"$file
   echo "  File name(.nc):"$ofile
-  echo "  Year          :"$year
+  echo "  Year(or Date) :"$year
   echo "  Jdays         :"$jdays
   echo "  Unit          :"$unit
   echo "  Temporal mean :"$temporal
@@ -219,6 +245,8 @@ CHK:
     set code=/$codedir/mk_ofuro_nc_clm_v1.1.f
    else if ($sw_ltmm == 1) then
     set code=/$codedir/mk_ofuro_nc_ltmm_v1.1.f
+   else if ($sw_aday == 1) then
+    set code=/$codedir/mk_ofuro_nc_aday_v1.4.f
    else
     if ($sw_real == 1) then
      set code=/$codedir/mk_ofuro_nc_v1.1.f
@@ -235,6 +263,8 @@ CHK:
     set code=/$codedir/mk_ofuro_nc_clm_lr_v1.1.f
    else if ($sw_ltmm == 1) then
     set code=/$codedir/mk_ofuro_nc_ltmm_lr_v1.1.f
+   else if ($sw_aday == 1) then
+    set code=/$codedir/mk_ofuro_nc_aday_lr_v1.4.f
    else
     set code=/$codedir/mk_ofuro_nc_lr_v1.1.f
    endif
@@ -247,6 +277,8 @@ CHK:
   sed s:OOUUTTPPUUTT:"$ofile":g tmp2_$$.f > tmp1_$$.f
   sed s/YYYY1/$year1/g tmp1_$$.f > tmp2_$$.f
   sed s/YYYY2/$year2/g tmp2_$$.f > tmp1_$$.f
+  sed s/MM1/$month1/g tmp1_$$.f > tmp2_$$.f
+  sed s/DD1/$day1/g tmp2_$$.f > tmp1_$$.f
   sed s/YYYY/$year/g tmp1_$$.f > tmp2_$$.f
   sed s/JJDD/$jdays/g tmp2_$$.f > tmp1_$$.f
   
@@ -258,6 +290,6 @@ CHK:
   if -r tmp_$$.f rm tmp_$$.f
   if -r tmp1_$$.f rm tmp1_$$.f
   if -r tmp2_$$.f rm tmp2_$$.f
-  if -r tmp1_$$ rm tmp1_$$
+#  if -r tmp1_$$ rm tmp1_$$
   if -r get_year rm get_year
 
