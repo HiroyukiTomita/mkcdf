@@ -13,7 +13,7 @@
 `-lr`: 360 x 180 input  
 `-era5`: 1440 x 721 input  
 ### TR
-`-hour`: hourly mean (365*24 or 366*24 days)  
+`-hour`: hourly mean (365x24 or 366x24 hours)  
 `-day`: daily mean (365 or 366 days)  
 `-aday`: a day (a specific day) with YYYY-MM-DD 
 `-mon`: monthly mean (12 months)  

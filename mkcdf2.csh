@@ -13,7 +13,9 @@
 #   -hr   : 1440 x 720
 #   -lr   :  360 x 180
 #   -era5 : 1440 x 721
+#
 #  TR: Temporal Resolution
+#   -hour: hourly mean (365x24 or 366x24 hours)
 #   -day : daily mean   (365 or 366 days)
 #   -mon : monthly mean (12 months) 
 #   -ann : annual mean  (1)
@@ -27,6 +29,7 @@
 #   -integer  
 #
 # CHANGES
+#  V1.5.1 @MacPro3 (add option -hour)
 #  V1.5 @MacPro3 (add option -era5)
 #  V1.4 @MacPro3 (add option -aday)
 #  V1.3 @MacPro3 (add option for integer[daily hr only])
