@@ -49,8 +49,8 @@
   set sw_hr=1
   set sw_lr=0
   set sw_era5=0
-  set ws_hour=0
-  set ws_day=1
+  set sw_hour=0
+  set sw_day=1
   set sw_mon=0
   set sw_ann=0
   set sw_clm=0
