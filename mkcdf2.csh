@@ -15,7 +15,7 @@
 #   -era5 : 1440 x 721
 #
 #  TR: Temporal Resolution
-#   -hour: hourly mean (365x24 or 366x24 hours)
+#   -hour: hourly mean (365x24 or 366x24 hours) only for -era5
 #   -day : daily mean   (365 or 366 days)
 #   -mon : monthly mean (12 months) 
 #   -ann : annual mean  (1)
@@ -49,6 +49,7 @@
   set sw_hr=1
   set sw_lr=0
   set sw_era5=0
+  set ws_hour=0
   set ws_day=1
   set sw_mon=0
   set sw_ann=0
@@ -78,6 +79,10 @@
      set sw_hr=0
      set sw_lr=0
      set sw_era5=1
+     goto SKIP
+    endif
+    if ( "$input" == "-hour" ) then
+     set sw_hour=1
      goto SKIP
     endif
     if ( "$input" == "-mon" ) then
@@ -218,7 +223,9 @@ OFILE:
 
 # TEMPORAL
 TEMPORAL:
- if ($sw_mon == 1) then
+ if ($sw_hour == 1) then
+  set temporal=hourly
+ else if ($sw_mon == 1) then
   set temporal=monthly
  else if ($sw_ann == 1) then
   set temporal=annual
@@ -282,7 +289,9 @@ CHK:
     set code=/$codedir/mk_ofuro_nc_lr_v1.1.f
    endif
   else if ($sw_era5 == 1) then
-   if ($sw_mon == 1) then
+   if ($sw_hour == 1) then
+    set code=/$codedir/mk_ofuro_nc_hourly_era5_v1.1.f
+   else if ($sw_mon == 1) then
     set code=/$codedir/mk_ofuro_nc_monthly_era5_v1.1.f
    else if ($sw_ann == 1) then
     set code=/$codedir/mk_ofuro_nc_annual_era5_v1.1.f
