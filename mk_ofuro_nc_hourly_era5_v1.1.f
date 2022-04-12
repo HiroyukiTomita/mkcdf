@@ -79,7 +79,7 @@ C     We recommend that each variable carry a "units" attribute.
       parameter (VAR_UNITS = 'UUNNIITT')
       parameter (LAT_UNITS = 'degrees_north')
       parameter (LON_UNITS = 'degrees_east')
-      parameter (REC_UNITS = 'days since YYYY-01-01')
+      parameter (REC_UNITS = 'hours since YYYY-01-01')
 
 c     Time origin
       character*(*) TORG
