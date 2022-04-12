@@ -10,10 +10,12 @@
 #   -unit      : unit for variable [option]
 #
 #  SR: Spatial Resolution
-#   -hr : 1440 x 720
-#   -lr :  360 x 180
+#   -hr   : 1440 x 720
+#   -lr   :  360 x 180
+#   -era5 : 1440 x 721
 #
 #  TR: Temporal Resolution
+#   -hour: hourly mean (365x24 or 366x24 hours) only for -era5
 #   -day : daily mean   (365 or 366 days)
 #   -mon : monthly mean (12 months) 
 #   -ann : annual mean  (1)
@@ -27,6 +29,8 @@
 #   -integer  
 #
 # CHANGES
+#  V1.5.1 @MacPro3 (add option -hour)
+#  V1.5 @MacPro3 (add option -era5)
 #  V1.4 @MacPro3 (add option -aday)
 #  V1.3 @MacPro3 (add option for integer[daily hr only])
 #  v1.2 @MacPro3 (add EMSST variables)
@@ -36,7 +40,7 @@
    set netcdfinc=/opt/local/include
    set netcdflib=/opt/local/lib
    set codedir=/Users/tomita/KSD/UNIX/MKCDF/mkcdf
-   set version=v1.4
+   set version=v1.5
 
 # INIT.
   set name=VAR
@@ -44,7 +48,9 @@
   set nopt=$#argv
   set sw_hr=1
   set sw_lr=0
-  set ws_day=1
+  set sw_era5=0
+  set sw_hour=0
+  set sw_day=1
   set sw_mon=0
   set sw_ann=0
   set sw_clm=0
@@ -60,11 +66,23 @@
     if ( "$input" == "-hr" ) then
      set sw_hr=1
      set sw_lr=0
+     set sw_era5=0
      goto SKIP
     endif
     if ( "$input" == "-lr" ) then
      set sw_hr=0
      set sw_lr=1
+     set sw_era5=0
+     goto SKIP
+    endif
+    if ( "$input" == "-era5" ) then
+     set sw_hr=0
+     set sw_lr=0
+     set sw_era5=1
+     goto SKIP
+    endif
+    if ( "$input" == "-hour" ) then
+     set sw_hour=1
      goto SKIP
     endif
     if ( "$input" == "-mon" ) then
@@ -205,7 +223,9 @@ OFILE:
 
 # TEMPORAL
 TEMPORAL:
- if ($sw_mon == 1) then
+ if ($sw_hour == 1) then
+  set temporal=hourly
+ else if ($sw_mon == 1) then
   set temporal=monthly
  else if ($sw_ann == 1) then
   set temporal=annual
@@ -268,6 +288,22 @@ CHK:
    else
     set code=/$codedir/mk_ofuro_nc_lr_v1.1.f
    endif
+  else if ($sw_era5 == 1) then
+   if ($sw_hour == 1) then
+    set code=/$codedir/mk_ofuro_nc_hourly_era5_v1.1.f
+   else if ($sw_mon == 1) then
+    set code=/$codedir/mk_ofuro_nc_monthly_era5_v1.1.f
+   else if ($sw_ann == 1) then
+    set code=/$codedir/mk_ofuro_nc_annual_era5_v1.1.f
+   else if ($sw_clm == 1) then
+    set code=/$codedir/mk_ofuro_nc_clm_era5_v1.1.f
+   else if ($sw_ltmm == 1) then
+    set code=/$codedir/mk_ofuro_nc_ltmm_era5_v1.1.f
+   else if ($sw_aday == 1) then
+    set code=/$codedir/mk_ofuro_nc_aday_era5_v1.4.f
+   else
+    set code=/$codedir/mk_ofuro_nc_era5_v1.1.f
+   endif
   endif
  
   sed s/VVAARR/$name/g $code >tmp1_$$.f
@@ -284,6 +320,7 @@ CHK:
   
   ifort -I$netcdfinc -L$netcdflib -lnetcdff -o out_nc tmp1_$$.f
   ./out_nc
+
 
 # CLEAN
   if -r out_nc rm out_nc
