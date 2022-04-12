@@ -12,6 +12,7 @@
 `-hr`: 1440 x 720 input  
 `-lr`: 360 x 180 input  
 `-era5`: 1440 x 721 input  
+`-cera20c`: 360 x 181 input
 ### TR
 `-hour`: hourly mean (365x24 or 366x24 hours)  
 `-day`: daily mean (365 or 366 days)  
