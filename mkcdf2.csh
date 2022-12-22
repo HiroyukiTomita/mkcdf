@@ -16,14 +16,15 @@
 #   -cera20c :  360 x 361
 #
 #  TR: Temporal Resolution
-#   -hour: hourly mean (365x24 or 366x24 hours) only for -era5
-#   -day : daily mean   (365 or 366 days)
-#   -mon : monthly mean (12 months) 
-#   -ann : annual mean  (1)
-#   -clm : climatological mean (12 months)
-#   -ltmm: long-term monthly mean (12 months x n years)
+#   -hour  : hourly mean (365x24 or 366x24 hours) only for -era5
+#   -6hour : 6 hourly mean (365x4 or 366x4 hours) 
+#   -day   : daily mean   (365 or 366 days)
+#   -mon   : monthly mean (12 months) 
+#   -ann   : annual mean  (1)
+#   -clm   : climatological mean (12 months)
+#   -ltmm  : long-term monthly mean (12 months x n years)
 #          (data file must be one big file as data_file_YYYY1-YYYY2.bin)
-#   -aday: a day (a specific day) with YYYY-MM-DD
+#   -aday  : a day (a specific day) with YYYY-MM-DD
 #
 #  DT: Data Type
 #   -real (default)
@@ -53,6 +54,7 @@
   set sw_era5=0
   set sw_cera20c=0
   set sw_hour=0
+  set sw 6hour=0
   set sw_day=1
   set sw_mon=0
   set sw_ann=0
@@ -96,6 +98,10 @@
     endif
     if ( "$input" == "-hour" ) then
      set sw_hour=1
+     goto SKIP
+    endif
+    if ( "$input" == "-6hour" ) then
+     set sw_6hour=1
      goto SKIP
     endif
     if ( "$input" == "-mon" ) then
@@ -238,6 +244,8 @@ OFILE:
 TEMPORAL:
  if ($sw_hour == 1) then
   set temporal=hourly
+ else if ($sw_hour == 1) then
+  set temporal=6hourly
  else if ($sw_mon == 1) then
   set temporal=monthly
  else if ($sw_ann == 1) then
@@ -280,6 +288,8 @@ CHK:
     set code=/$codedir/mk_ofuro_nc_ltmm_v1.1.f
    else if ($sw_aday == 1) then
     set code=/$codedir/mk_ofuro_nc_aday_v1.4.f
+   else if ($sw_6hour == 1) then
+    set code=/$codedir/mk_ofuro_nc_6hourly_v1.1.f
    else
     if ($sw_real == 1) then
      set code=/$codedir/mk_ofuro_nc_v1.1.f
@@ -349,7 +359,6 @@ CHK:
   
   ifort -I$netcdfinc -L$netcdflib -lnetcdff -o out_nc tmp1_$$.f
   ./out_nc
-
 
 # CLEAN
   if -r out_nc rm out_nc

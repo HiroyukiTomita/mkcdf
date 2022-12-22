@@ -14,8 +14,8 @@
 `-era5`: 1440 x 721 input  
 `-cera20c`: 360 x 181 input
 ### TR
-`-hour`: hourly mean (365x24 or 366x24 hours) only for -era5 and -cera20c 
-`-6hour`: hourly mean (365x4 or 366x4 hours) only for -hr 
+`-hour`: hourly mean (365x24 or 366x24 hours) only for -era5 and -cera20c   
+`-6hour`: hourly mean (365x4 or 366x4 hours) only for -hr   
 `-day`: daily mean (365 or 366 days)  
 `-aday`: a day (a specific day) with YYYY-MM-DD   
 `-mon`: monthly mean (12 months)  
