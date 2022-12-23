@@ -31,6 +31,7 @@
 #   -integer  
 #
 # CHANGES
+#  add option -6hour
 #  V1.5.2 @MBP2 (add option -cera20c)
 #  V1.5.1 @MacPro3 (add option -hour)
 #  V1.5 @MacPro3 (add option -era5)
@@ -54,7 +55,7 @@
   set sw_era5=0
   set sw_cera20c=0
   set sw_hour=0
-  set sw 6hour=0
+  set sw_6hour=0
   set sw_day=1
   set sw_mon=0
   set sw_ann=0
@@ -244,7 +245,7 @@ OFILE:
 TEMPORAL:
  if ($sw_hour == 1) then
   set temporal=hourly
- else if ($sw_hour == 1) then
+ else if ($sw_6hour == 1) then
   set temporal=6hourly
  else if ($sw_mon == 1) then
   set temporal=monthly
