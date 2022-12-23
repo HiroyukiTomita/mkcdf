@@ -42,7 +42,7 @@ C     This is the name of the data file we will create.
 C     We are writing 4D data, a 2 x 6 x 12 lvl-lat-lon grid, with 2
 C     timesteps of data.
       integer NDIMS, NRECS
-      parameter (NDIMS = 3, NRECS = JJDD*6)
+      parameter (NDIMS = 3, NRECS = JJDD*4)
       integer NLATS, NLONS
       parameter (NLATS = 720, NLONS = 1440)
       character*(*) LAT_NAME, LON_NAME, REC_NAME
@@ -112,7 +112,7 @@ C     Loop indices.
 C     Error handling.
       integer retval
 
-C     Create pretend data. If this wasn't an example program, we would
+c     Create pretend data. if this wasn't an example program, we would
 C     have some real data to write, for example, model output.
       do lat = 1, NLATS
          lats(lat) = START_LAT +(0.25/2) + (lat - 1) * 0.25
@@ -120,9 +120,9 @@ C     have some real data to write, for example, model output.
       do lon = 1, NLONS
          lons(lon) = START_LON+(0.25/2) + (lon - 1) * 0.25
       end do
+
       do rec1 = 1,NRECS
-         recs(rec1) = rec1 -1
-c         write(6,*) real(recs(rec1))
+         recs(rec1) = -6 + 6 * rec1
       enddo
 
 c 
