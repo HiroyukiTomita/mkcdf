@@ -12,7 +12,8 @@
 `-hr`: 1440 x 720 input  
 `-lr`: 360 x 180 input  
 `-era5`: 1440 x 721 input  
-`-cera20c`: 360 x 181 input
+`-cera20c`: 360 x 181 input  
+`-mwir`: 360 x 181 input  
 `-hadisdh`: 72 x 36 input
 ### TR
 `-hour`: hourly mean (365x24 or 366x24 hours) only for -era5 and -cera20c   
